@@ -40,7 +40,6 @@ def read_jpg(path):
     img_dim = (500,500)
     original = mpimg.imread(path)
     resized = cv2.resize(original, img_dim)
-    # print("Image shape:", resized.shape)
     if len(resized.shape) == 2:
         img = cv2.cvtColor(resized, cv2.COLOR_GRAY2RGB)
     else:
@@ -53,18 +52,12 @@ def read_png(path):
     img_dim = (500,500)
     original = cv2.imread(path)
     resized = cv2.resize(original, img_dim)
-    # print("Image shape:", resized.shape)
     if len(resized.shape) == 2:
         img = cv2.cvtColor(resized, cv2.COLOR_GRAY2RGB)
     else:
         img = resized
     
     return img
-
-def process_pdf(img):
-
-    pass
-    return processed
 
 def process_jpg(img):
 
@@ -201,11 +194,8 @@ def superimpose(img, watermark, output_dir):
     kycdoc_intensity = 0.8 # 80%
     if img.shape[2] < 4:
         img = np.dstack([img, np.ones((img.shape[0], img.shape[1]), dtype="uint8") * 255])
-    # print(img.shape)
-    # print(watermark.shape)
     lasagna = cv2.addWeighted(img, kycdoc_intensity, watermark, watermark_intensity, 0)
     destination = output_dir + str(datetime.datetime.now()) + '.jpg'
-    # print(destination)
     cv2.imwrite(destination, lasagna)
 
 def run(input_file, logo_file, output_dir):
@@ -223,7 +213,6 @@ def run(input_file, logo_file, output_dir):
 
         for page in pages:
 
-            # print(page)
             img = mpimg.imread(page)
             h,w,a = img.shape
             height = h//2
@@ -244,7 +233,6 @@ def run(input_file, logo_file, output_dir):
 
         for i in os.listdir(output_dir + 'PDF/'):
 
-            # print(output_dir + 'PDF/' + i)
             im = Img.open(output_dir + 'PDF/' + i)
             im_list.append(im)
 
@@ -289,7 +277,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     list_of_docs = os.listdir(args.input)
-    
+
     for doc in list_of_docs:
         run(args.input + doc, args.logo, args.output)
         os.remove(args.input + doc)
